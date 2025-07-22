@@ -1,12 +1,54 @@
-# React + Vite
+# To-Do List
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Description
+React Project for Kiwi class. This is a To-Do List application for users to be able to keep track of daily tasks. 
 
-Currently, two official plugins are available:
+## Table of Contents
+- [Installation](#installation)
+- [Running the Development Server](#running-the-development-server)
+- [Usage](#usage)
+- [Configuration](#configuration)
+- [License](#license)
+- [Contact](#contact)
+- [Acknowledgments](#acknowledgments)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Installation
+1. Prerequisite: [Node.js](https://nodejs.org/)
+2. Clone the repository: `git clone https://github.com/rosangely-dls/todo-list.git`
+3. Navigate to the project directory: `cd todo-list`
+4. Install dependencies: `npm install`
 
-## Expanding the ESLint configuration
+## Running the Development Server
+To start the development server and view the application in your browser, follow these steps: 
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+ 1. **Ensure Dependencies are Installed**:
+ Make sure you have installed all necessary dependencies by running: 
+``bash
+npm install
+
+2. Start the Development Server
+Run the following command to start the development server: 
+npm start
+
+This will start the server and open the application in your default web browser 
+
+3. View the Application
+Once the server is running, you can view the application in your browser. Any changes you make to the source files will automatically reload the page
+
+## Usage
+
+
+## Configuration
+
+## Contributing
+Contributions are welcome
+
+## License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Contact
+Rosangely De Los Santos [lee.rosangely@gmail.com]
+
+## Acknowledgments
+- Inspiration
+- Libraries used
