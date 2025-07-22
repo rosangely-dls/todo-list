@@ -11,7 +11,7 @@ export default defineConfig([
     files: ['**/*.{js,jsx}'],
     extends: [
       js.configs.recommended,
-      react,
+      react.configs.recommended,
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
     ],
@@ -30,12 +30,11 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-      ...jsConfig.configs.recommended.rules,
-      ...reactConfig.configs.recommended.rules,
-      ...reactConfig.configs['jsx-runtime'].rules,
+      'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]' }],
+      ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...react.configs['jsx-runtime'].rules,
       //...other rules
-        'no-unused-vars': 'warn', //this changes the error to a warning
         'react/prop-types': 'off', //this suppresses warnings about not using prop-types
         //other rules...
     },
