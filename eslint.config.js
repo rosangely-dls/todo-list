@@ -29,6 +29,10 @@ export default defineConfig([
         version: 'detect',
       },
     },
+    plugins: [
+      'react',
+      reactHooks,
+    ],
     rules: {
       'no-unused-vars': ['warn', { varsIgnorePattern: '^[A-Z_]' }],
       ...js.configs.recommended.rules,
