@@ -3,8 +3,8 @@ import React from 'react';
 function ToDoForm() {
  return (
     <form>
-        <label htmlFor="todo-input">New ToDo:</label>
-        <input type="text" id="todo-input" name="todo" />
+        <label htmlFor="todoTitle">Todo:</label>
+        <input type="text" id="todoTitle" name="todo" />
         <button type="submit">Add Todo</button>
     </form>
  );
