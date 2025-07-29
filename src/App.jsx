@@ -1,7 +1,8 @@
-
+import { useState } from "react";
 import "./App.css";
 import ToDoList from "./ToDoList";
-import { useState } from "react";
+import ToDoForm from "./ToDoForm";
+
 
 
 function App() {
@@ -18,14 +19,12 @@ function App() {
   return (
     <div>
       <h1>My To-Dos</h1>
-      
-      <input
-      type="text"
-      value={newToDo}
-      onChange={(e) => setNewToDo(e.target.value)}
-      placeholder="Enter a new todo"
+
+      <ToDoForm
+      newToDo={newToDo}
+      setNewToDo={setNewToDo}
+      handleAddToDo={handleAddToDo}
       />
-      <button onClick={handleAddToDo}>Add</button>
       
       <p>{newToDo}</p>
 

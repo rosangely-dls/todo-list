@@ -1,13 +1,17 @@
-/*import React from 'react';
+import React from 'react';
 
-function ToDoForm() {
+function ToDoForm({newToDo, setNewToDo, handleAddToDo }) {
  return (
-    <form>
-        <label htmlFor="todoTitle">Todo:</label>
-        <input type="text" id="todoTitle" name="todo" />
+    <form on onSubmit={(e) => { e.preventDefault(); handleAddToDo(); }}>
+        <input
+        type="text"
+        value={newToDo}
+        onChange={(e) => setNewToDo(e.target.value)}
+        placeholder="Enter a new todo"
+        />
         <button type="submit">Add Todo</button>
     </form>
  );
 }
 
-export default ToDoForm; */
+export default ToDoForm; 
