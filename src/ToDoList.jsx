@@ -1,15 +1,10 @@
 import ToDoListItem from "./ToDoListItem";
 
-function ToDoList() {
-    const todos = [
-    { id: 1, title: "review resources" },
-    { id: 2, title: "take notes" },
-    { id: 3, title: "code out app" },
-  ];
+function ToDoList({toDoList}) {
     return (
         <ul>
-        {todos.map(todo => (
-            <ToDoListItem key={todo.id} todo={todo} />
+        {toDoList.map((todo, index) => (
+            <ToDoListItem key={index} todo={todo} />
         ))}
       </ul>
     );

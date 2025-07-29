@@ -2,7 +2,7 @@ import React from 'react';
 
 function ToDoForm({newToDo, setNewToDo, handleAddToDo }) {
  return (
-    <form on onSubmit={(e) => { e.preventDefault(); handleAddToDo(); }}>
+    <form onSubmit={(e) => { e.preventDefault(); handleAddToDo(); }}>
         <input
         type="text"
         value={newToDo}
