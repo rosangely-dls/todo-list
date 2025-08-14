@@ -5,16 +5,20 @@ import ToDoForm from "./ToDoForm";
 
 
 
+
 function App() {
-  const [newToDo, setNewToDo] = useState(" ");
+  const [newToDo, setNewToDo] = useState("");
   const [toDoList, setToDoList] = useState([]);
 
-  const handleAddToDo = () => {
-    if (newToDo.trim()) {
-      setToDoList([...toDoList, newToDo]);
-      setNewToDo("");
-    }
-  };
+function addToDo(title) {
+  if (title.trim()) {
+    const newToDo = {
+      title: title,
+      id: Date.now(),
+    };
+    setToDoList([...toDoList, newToDo]);
+  } 
+}
 
   return (
     <div>
@@ -23,11 +27,8 @@ function App() {
       <ToDoForm
       newToDo={newToDo}
       setNewToDo={setNewToDo}
-      handleAddToDo={handleAddToDo}
-      />
-      
-      <p>{newToDo}</p>
-
+      onAddToDo={addToDo}
+      /> 
       <ToDoList toDoList={toDoList} />
    </div>
   );

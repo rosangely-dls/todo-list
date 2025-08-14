@@ -3,8 +3,8 @@ import ToDoListItem from "./ToDoListItem";
 function ToDoList({toDoList}) {
     return (
         <ul>
-        {toDoList.map((todo, index) => (
-            <ToDoListItem key={index} todo={todo} />
+        {toDoList.map((todo) => (
+            <ToDoListItem key={todo.id} todo={todo} />
         ))}
       </ul>
     );
