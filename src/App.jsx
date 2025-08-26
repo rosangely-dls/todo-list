@@ -5,7 +5,7 @@ import ToDoForm from './features/ToDoForm';
 
 function App() {
   const [newToDo, setNewToDo] = useState('');
-  const [toDoList, setToDoList] = useState([]);
+  const [toDoList, setToDoList] = useState([])
 
   function addToDo(title) {
     if (title.trim()) {
@@ -43,9 +43,7 @@ function App() {
       <h1>My To-Dos</h1>
 
       <ToDoForm newToDo={newToDo} setNewToDo={setNewToDo} onAddToDo={addToDo} />
-      <ToDoList toDoList={toDoList} onCompleteTodo={completeTodo}
-      onUpdateTodo={updateTodo}
-       />
+      <ToDoList toDoList={toDoList} onCompleteTodo={completeTodo} onUpdateTodo={updateTodo} />
     </div>
   );
 }

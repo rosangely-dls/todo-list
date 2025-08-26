@@ -1,18 +1,11 @@
-import React, { useState } from 'react';
-import TextInputWithLabel from '../shared/TextInputWithLabel';
+import "../../shared/TextInputWithLabel.jsx";
+import { useState } from "react";
+import TextInputWithLabel from '../../shared/TextInputWithLabel.jsx';
 
 function ToDoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
 
     const [isEditing, setIsEditing] = useState(false);
     const [workingTitle, setWorkingTitle] = useState(todo.title);
-
-    const toggleEditMode = () => {
-        setIsEditing(!isEditing);
-    };
-
-    const handleSave = () => {
-        handleUpdate();
-    };
 
     const handleCancel = () => {
         setWorkingTitle(todo.title);
@@ -23,45 +16,41 @@ function ToDoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
         setWorkingTitle(event.target.value);
     };
 
-    const handleUpdate =(event) => {
+    function handleUpdate(event) {
         if (!isEditing) return;
         event.preventDefault();
-
         onUpdateTodo({...todo, title: workingTitle });
-
+        setWorkingTitle(todo.title);
         setIsEditing(false);
-    };
+    }
 
     return (
     <li>
-            <input
-            type="checkbox"
-            checked={todo.isCompleted}
-            onChange={() => onCompleteTodo(todo.id)} />
+        <form onSubmit={handleUpdate}>
             {isEditing ? (
-                <form onSubmit={handleUpdate}>
-
-                <TextInputWithLabel
-                elementId={`todo-${todo.id}`}
-                labelText="Edit Todo"
-                value={workingTitle}
-                onChange={handleEdit}
-                onBlur={handleSave}
-                autoFocus
-                />
+                <>
+                <TextInputWithLabel value={workingTitle} onChange={handleEdit} />
                 <button type="button" onClick={handleCancel}>
                     Cancel
                 </button>
-                <button type="submit">
+                <button type="button" onClick={handleUpdate}>
                     Update
                 </button>
-                </form>
+                </>
             ) : (
-                <span onDoubleClick={toggleEditMode}>{todo.title}</span>
+                <>
+                <label>
+                    <input
+                    type="checkbox"
+                    id={`checkbox${todo.id}`}
+                    checked={todo.isCompleted}
+                    onChange={() => onCompleteTodo(todo.id)}
+                    />
+                </label>
+                <span onClick={() => setIsEditing(true)}>{todo.title}</span>
+                </>
             )}
-            <button onClick={isEditing ? handleUpdate : toggleEditMode}>
-                {isEditing ? 'Save' : 'Edit'}
-            </button>
+        </form>
     </li>
     );
 }
