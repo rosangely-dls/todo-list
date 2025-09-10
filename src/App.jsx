@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import ToDoList from './features/TodoList/ToDoList';
 import ToDoForm from './features/ToDoForm';
@@ -6,44 +6,232 @@ import ToDoForm from './features/ToDoForm';
 function App() {
   const [newToDo, setNewToDo] = useState('');
   const [toDoList, setToDoList] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  
+  const url = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+  const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  function addToDo(title) {
+useEffect(() => {
+    const fetchTodos = async () => {
+      setIsLoading(true);
+
+      const options = {
+        method: 'GET',
+        headers: {
+          Authorization: token,
+        },
+      };
+
+      try {
+        const resp = await fetch(url, options);
+
+        if (!resp.ok) {
+          throw new Error('Failed to fetch todos');
+        }
+        
+        const data = await resp.json();
+
+        const todos = data.records.map(record => ({
+            id: record.id,
+            title: record.fields.title,
+            isCompleted: record.fields.isCompleted || false,
+          }));
+
+
+        setToDoList(todos);
+      } catch (error) {
+        setErrorMessage(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchTodos();
+}, []);
+
+ async function addToDo(title) {
     if (title.trim()) {
       const newToDo = {
+        fields: {
         title: title,
-        id: Date.now(),
-        isCompleted: false,
+        isCompleted: false
+        }
       };
-      setToDoList([...toDoList, newToDo]);
+
+      const payload = {
+        records: [newToDo]
+      };
+
+      const options = {
+        method: 'POST',
+        headers: {
+          Authorization: token,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      };
+
+        try {
+          setIsSaving(true);
+
+          const resp = await fetch(url, options);
+
+          if (!resp.ok) {
+            throw new Error('Failed to save the new todo');
+          }
+
+          const { records } = await resp.json();
+          const savedTodo = {
+            id: records[0].id,
+            ...records[0].fields
+          };
+
+          if (!records[0].fields.isCompleted) {
+            savedTodo.isCompleted = false;
+          }
+
+          setToDoList(prevToDoList => [...prevToDoList, savedTodo]);
+      } catch (error) {
+        console.error(error);
+        setErrorMessage(error.message);
+      } finally {
+        setIsSaving(false);
+      }
+      }
     }
+
+ async function completeTodo(todoId) {
+  const originalTodo = toDoList.find((todo) => todo.id === todoId);
+
+  setToDoList((prevToDoList) =>
+  prevToDoList.map((todo) =>
+  todo.id === todoId ? { ...todo, isCompleted: true } : todo 
+)
+);
+
+const payload = {
+  records: [
+    {
+      id: todoId,
+      fields: {
+        title: originalTodo.title,
+        isCompleted: true,
+      },
+    },
+  ],
+};
+
+const options = {
+  method: 'PATCH',
+  headers: {
+    'Authorization': token, 
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(payload),
+};
+
+try {
+  const resp = await fetch(url, options);
+
+  if (!resp.ok) {
+    throw new Error('Failed to update the todo');
   }
 
-  function completeTodo(todoId) {
-    const updatedToDos = toDoList.map((todo) => {
-      if (todo.id === todoId) {
-        return { ...todo, isCompleted: true };
-      }
-      return todo;
-    });
-    setToDoList(updatedToDos);
-  }
+} catch (error) {
+  console.error(error);
+  setErrorMessage(`${error.message}. Reverting todo...`);
 
-  function updateTodo(editedTodo) {
-    const updatedToDos = toDoList.map((todo) => {
-      if (todo.id === editedTodo.id) {
-        return {...editedTodo};
-      }
-      return todo;
-    });
-    setToDoList(updatedToDos);
+  setToDoList((prevToDoList) =>
+  prevToDoList.map((todo) =>
+  todo.id === originalTodo.id ? originalTodo : todo
+)
+);
+}
+ }
+
+  async function updateTodo(editedTodo) {
+    const originalTodo = toDoList.find((todo) => todo.id === editedTodo.id);
+
+    const payload = {
+      records: [
+        {
+          id: editedTodo.id,
+          fields: {
+            title: editedTodo.title,
+            isCompleted: editedTodo.isCompleted,
+          },
+        },
+      ],
+    };
+  
+  const options = {
+    method: 'PATCH',
+    headers: {
+      'Authorization': token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  };
+
+  try {
+    setIsSaving(true);
+
+    const resp = await fetch(url, options);
+
+    if (!resp.ok) {
+      throw new Error('Failed to update the todo');
+    }
+
+    const data = await resp.json();
+    const updatedTodo = {
+      id: data.records[0].id,
+      ...data.records[0].fields,
+    };
+
+    setToDoList((prevToDoList) =>
+    prevToDoList.map((todo) =>
+    todo.id === updatedTodo.id ? updatedTodo : todo
+  )
+);
+  } catch (error) {
+    console.error(error);
+    setErrorMessage(`${error.message}. Reverting todo...`);
+
+    setToDoList((prevToDoList) =>
+    prevToDoList.map((todo) =>
+    todo.id === originalTodo.id ? originalTodo : todo
+  )
+);
+  } finally {
+    setIsSaving(false);
   }
+}
 
   return (
     <div>
       <h1>My To-Dos</h1>
 
-      <ToDoForm newToDo={newToDo} setNewToDo={setNewToDo} onAddToDo={addToDo} />
-      <ToDoList toDoList={toDoList} onCompleteTodo={completeTodo} onUpdateTodo={updateTodo} />
+      <ToDoForm 
+      newToDo={newToDo} 
+      setNewToDo={setNewToDo} 
+      onAddToDo={addToDo}
+      isSaving={isSaving}
+      />
+      <ToDoList 
+      toDoList={toDoList} 
+      onCompleteTodo={completeTodo} 
+      onUpdateTodo={updateTodo}
+      isLoading={isLoading}  
+      />
+    {isLoading && <p>Loading...</p>}
+    {errorMessage && (
+      <div>
+        <hr />
+        <p>{errorMessage}</p>
+        <button onClick={() => setErrorMessage('')}>Dismiss</button>
+        </div>
+    )}
     </div>
   );
 }

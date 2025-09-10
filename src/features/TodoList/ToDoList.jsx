@@ -1,12 +1,15 @@
 import React from 'react';
 import ToDoListItem from './ToDoListItem';
 
-function ToDoList({ toDoList, onCompleteTodo, onUpdateTodo }) {
+function ToDoList({ toDoList, onCompleteTodo, onUpdateTodo, isLoading }) {
   const filteredTodoList = toDoList.filter((todo) => !todo.isCompleted);
 
   return (
     <div>
-      {filteredTodoList.length === 0 ? (
+      {isLoading ? (
+        <p>Todo list loading...</p>
+      ) : (
+      filteredTodoList.length === 0 ? (
         <p>Add a todo to get started</p>
       ) : (
         <ul>
@@ -19,6 +22,7 @@ function ToDoList({ toDoList, onCompleteTodo, onUpdateTodo }) {
             />
           ))}
         </ul>
+      )
       )}
     </div>
   );
