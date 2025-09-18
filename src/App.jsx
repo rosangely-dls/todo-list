@@ -1,18 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import './App.css';
 import ToDoList from './features/TodoList/ToDoList';
 import ToDoForm from './features/ToDoForm';
 import TodosViewForm from './features/TodosViewForm';
 
-const encodeUrl = ({ sortField, sortDirection, baseUrl, queryString }) => {
-  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-  let searchQuery = '';
-
-  if (queryString) {
-    searchQuery = `&filterByFormula=SEARCH("${queryString}", title)`;
-  }
-  return encodeURI(`${baseUrl}?${sortQuery}${searchQuery}`);
-};
 
 
 function App() {
@@ -22,8 +13,17 @@ function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [queryString, setQueryString] = useState('');
-  
   const baseUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+  const encodeUrl = useCallback(()=> {
+  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+  let searchQuery = '';
+
+  if (queryString) {
+    searchQuery = `&filterByFormula=SEARCH("${queryString}", title)`;
+  }
+  return encodeURI(`${baseUrl}?${sortQuery}${searchQuery}`);
+}, [sortField, sortDirection, baseUrl, queryString]);
+
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
   const [sortField, setSortField] = useState('createdTime');
@@ -38,7 +38,7 @@ function App() {
   };
 const fetchSortedData = async () => {
     try {
-      const requestUrl = encodeUrl({ sortField, sortDirection, baseUrl, queryString });
+      const requestUrl = encodeUrl();
       const response = await fetch(requestUrl, {
         headers: {
           'Authorization': token
@@ -67,7 +67,7 @@ useEffect(() => {
       };
 
       try {
-        const requestUrl = encodeUrl({ sortField, sortDirection, baseUrl, queryString })
+        const requestUrl = encodeUrl()
         const resp = await fetch(requestUrl, options);
 
         if (!resp.ok) {
