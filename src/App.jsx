@@ -13,10 +13,15 @@ function App() {
   const [errorMessage, setErrorMessage] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [queryString, setQueryString] = useState('');
+
+  const [sortField, setSortField] = useState('createdTime');
+  const [sortDirection, setSortDirection] = useState('desc');
+ 
   const baseUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+  
   const encodeUrl = useCallback(()=> {
-  let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
-  let searchQuery = '';
+    let sortQuery = `sort[0][field]=${sortField}&sort[0][direction]=${sortDirection}`;
+    let searchQuery = '';
 
   if (queryString) {
     searchQuery = `&filterByFormula=SEARCH("${queryString}", title)`;
@@ -26,8 +31,7 @@ function App() {
 
   const token = `Bearer ${import.meta.env.VITE_PAT}`;
 
-  const [sortField, setSortField] = useState('createdTime');
-  const [sortDirection, setSortDirection] = useState('desc');
+
 
   const updateSortField = (newField) => {
     setSortField(newField);
@@ -36,6 +40,7 @@ function App() {
   const updateSortDirection = (newDirection) => {
     setSortDirection(newDirection);
   };
+  
 const fetchSortedData = async () => {
     try {
       const requestUrl = encodeUrl();
