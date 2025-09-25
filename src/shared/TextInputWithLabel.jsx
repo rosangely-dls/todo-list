@@ -1,10 +1,19 @@
+import React, { forwardRef } from 'react';
+import styled from 'styled-components';
 
+const StyledLabel = styled.label`
+    padding: 5px;
+`;
 
-function TextInputWithLabel({ elementId, label, onChange, ref, value }) {
+const StyledInput = styled.input`
+    padding: 5px;
+`;
+
+const TextInputWithLabel = forwardRef(({ elementId, label, onChange, value }, ref) => {
     return (
         <>
-        <label htmlFor={elementId}>{label}</label>
-        <input
+        <StyledLabel htmlFor={elementId}>{label}</StyledLabel>
+        <StyledInput
         type="text"
         id={elementId}
         ref={ref}
@@ -13,7 +22,7 @@ function TextInputWithLabel({ elementId, label, onChange, ref, value }) {
         />
         </>
     );
-}
+});
 
 
 export default TextInputWithLabel;

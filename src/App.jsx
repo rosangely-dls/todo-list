@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import './App.css';
+import styles from './App.module.css';
 import ToDoList from './features/TodoList/ToDoList';
 import ToDoForm from './features/ToDoForm';
 import TodosViewForm from './features/TodosViewForm';
@@ -258,7 +259,7 @@ try {
 
   return (
     <div>
-      <h1>My To-Dos</h1>
+      <h1 className={styles.header}>My To-Dos</h1>
       <TodosViewForm
       sortDirection={sortDirection}
       setSortDirection={setSortDirection}
