@@ -1,6 +1,6 @@
-import "../../shared/TextInputWithLabel.jsx";
 import { useState, useEffect } from "react";
 import TextInputWithLabel from '../../shared/TextInputWithLabel.jsx';
+import styles from './ToDoListItem.module.css';
 
 function ToDoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
 
@@ -20,6 +20,14 @@ function ToDoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
         setWorkingTitle(event.target.value);
     };
 
+    const handleCheckboxChange = () => {
+        onCompleteTodo(todo.id);
+    };
+
+    const enableEditing = () => {
+        setIsEditing(true);
+    };
+
     function handleUpdate(event) {
         if (!isEditing) return;
         event.preventDefault();
@@ -29,7 +37,7 @@ function ToDoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
     }
 
     return (
-    <li>
+    <li className={styles.item}>
         <form onSubmit={handleUpdate}>
             {isEditing ? (
                 <>
@@ -48,10 +56,10 @@ function ToDoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
                     type="checkbox"
                     id={`checkbox${todo.id}`}
                     checked={todo.isCompleted}
-                    onChange={() => onCompleteTodo(todo.id)}
+                    onChange={handleCheckboxChange}
                     />
                 </label>
-                <span onClick={() => setIsEditing(true)}>{todo.title}</span>
+                <span onClick={enableEditing}>{todo.title}</span>
                 </>
             )}
         </form>
