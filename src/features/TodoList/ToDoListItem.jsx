@@ -37,7 +37,7 @@ function ToDoListItem({ todo, onCompleteTodo, onUpdateTodo }) {
     }
 
     return (
-    <li>
+    <li className={styles.item}>
         <form onSubmit={handleUpdate}>
             {isEditing ? (
                 <>
