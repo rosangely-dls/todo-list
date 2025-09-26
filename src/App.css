@@ -1,19 +1,21 @@
-h1 {
-    font-family: 'Playfair Display', serif;
-    font-weight: bold;
-    color: rgb(18, 18, 18);
-    font-size: 40px;
-    background-color: #b2ac88;
-    margin: 25px;
-    text-align: left;
-}
+
 
 body {
-background-color: #FFFFFF;
+background-color: #efefef;
 font-family: 'Playfair Display', serif;
 margin: 0px;
-text-align: center;
+text-align: left;
 padding: 20px;
+
+}
+
+.addToDoForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 400px;
 
 }
 

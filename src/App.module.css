@@ -1,4 +1,12 @@
-h1 {
+.appContainer {
+    display: flex;
+    flex-direction: column;
+     height: 100vh;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.header {
 font-family: 'Playfair Display', serif;
 font-weight: bold;
 color: rgb(18, 18, 18);
@@ -8,21 +16,6 @@ margin: 25px;
 text-align: left;
 }
 
-body {
-background-color: #FFFFFF;
-font-family: 'Playfair Display', serif;
-margin: 0px;
-padding: 20px;
-}
-
-.appContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    box-sizing: border-box;
-    padding: 20px;
-}
 
 .errorMessage {
     border: 1px solid red;

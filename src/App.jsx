@@ -258,7 +258,7 @@ try {
 }
 
   return (
-    <div>
+    <div className={styles.appContainer}> 
       <h1 className={styles.header}>My To-Dos</h1>
       <TodosViewForm
       sortDirection={sortDirection}
@@ -285,7 +285,7 @@ try {
   <hr /> 
     {isLoading && <p>Loading...</p>}
     {errorMessage && (
-      <div>
+      <div className={styles.errorMessage}>
         <hr />
         <p>{errorMessage}</p>
         <button onClick={() => setErrorMessage('')}>Dismiss</button>
