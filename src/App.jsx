@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useReducer } from 'react';
+import { todosReducer, initialState, actionTypes } from './reducers/todos.reducer';
 import './App.css';
 import styles from './App.module.css';
 import ToDoList from './features/TodoList/ToDoList';
@@ -8,13 +9,10 @@ import TodosViewForm from './features/TodosViewForm';
 
 
 function App() {
-  const [newToDo, setNewToDo] = useState('');
-  const [toDoList, setToDoList] = useState([])
-  const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isSaving, setIsSaving] = useState(false);
-  const [queryString, setQueryString] = useState('');
+  const [state, dispatch] = useReducer(todosReducer, initialState);
 
+  const [newToDo, setNewToDo] = useState('');
+  const [queryString, setQueryString] = useState('');
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
  
@@ -63,7 +61,7 @@ const fetchSortedData = async () => {
 
 useEffect(() => {
     const fetchTodos = async () => {
-      setIsLoading(true);
+      dispatch({ type: actionTypes.SET_IS_LOADING, payload: true });
 
       const options = {
         method: 'GET',
@@ -89,11 +87,11 @@ useEffect(() => {
           }));
 
 
-        setToDoList(todos);
+        dispatch({ type: actionTypes.SET_TODO_LIST, payload: todos});
       } catch (error) {
-        setErrorMessage(error.message);
+        dispatch({ type: actionTypes.SET_ERROR_MESSAGE, payload: error.message });
       } finally {
-        setIsLoading(false);
+        dispatch({ type: actionTypes.SET_IS_LOADING, payload: false });
       }
     };
     fetchTodos();
@@ -122,7 +120,7 @@ useEffect(() => {
       };
 
         try {
-          setIsSaving(true);
+          dispatch({ type: actionTypes.SET_IS_SAVING, payload: true });
 
           const resp = await fetch(baseUrl, options);
 
@@ -135,29 +133,26 @@ useEffect(() => {
             id: records[0].id,
             ...records[0].fields
           };
+          
 
           if (!records[0].fields.isCompleted) {
             savedTodo.isCompleted = false;
           }
 
-          setToDoList(prevToDoList => [...prevToDoList, savedTodo]);
+          dispatch({ type: actionTypes.SET_TODO_LIST, payload: [...state.toDoList, savedTodo] });
       } catch (error) {
         console.error(error);
-        setErrorMessage(error.message);
+        dispatch({ type: actionTypes.SET_ERROR_MESSAGE, payload: error.message });
       } finally {
-        setIsSaving(false);
+        dispatch({ type: actionTypes.SET_IS_SAVING, payload: false });
       }
       }
     }
 
- async function completeTodo(todoId) {
-  const originalTodo = toDoList.find((todo) => todo.id === todoId);
+ const completeTodo = async (todoId) => {
+  const originalTodo = state.toDoList.find((todo) => todo.id === todoId);
 
-  setToDoList((prevToDoList) =>
-  prevToDoList.map((todo) =>
-  todo.id === todoId ? { ...todo, isCompleted: true } : todo 
-)
-);
+  dispatch({ type: actionTypes.COMPLETE_TODO, payload: todoId });
 
 const payload = {
   records: [
@@ -189,18 +184,14 @@ try {
 
 } catch (error) {
   console.error(error);
-  setErrorMessage(`${error.message}. Reverting todo...`);
+  dispatch({ type: actionTypes.SET_ERROR_MESSAGE, payload: `${error.message}. Reverting todo...` });
 
-  setToDoList((prevToDoList) =>
-  prevToDoList.map((todo) =>
-  todo.id === originalTodo.id ? originalTodo : todo
-)
-);
+  dispatch({ type: actionTypes.UPDATE_TODO, payload: originalTodo});
 }
- }
+ };
 
-  async function updateTodo(editedTodo) {
-    const originalTodo = toDoList.find((todo) => todo.id === editedTodo.id);
+  const updateTodo = async (editedTodo) => {
+    const originalTodo = state.toDoList.find((todo) => todo.id === editedTodo.id);
 
     const payload = {
       records: [
@@ -224,7 +215,7 @@ try {
   };
 
   try {
-    setIsSaving(true);
+    dispatch({ type: actionTypes.SET_IS_SAVING, payload: true });
 
     const resp = await fetch(baseUrl, options);
 
@@ -238,24 +229,16 @@ try {
       ...data.records[0].fields,
     };
 
-    setToDoList((prevToDoList) =>
-    prevToDoList.map((todo) =>
-    todo.id === updatedTodo.id ? updatedTodo : todo
-  )
-);
+    dispatch({ type: actionTypes.UPDATE_TODO, payload: updatedTodo });
   } catch (error) {
     console.error(error);
-    setErrorMessage(`${error.message}. Reverting todo...`);
+    dispatch({ type: actionTypes.SET_ERROR_MESSAGE, payload: `${error.message}. Reverting todo...` });
 
-    setToDoList((prevToDoList) =>
-    prevToDoList.map((todo) =>
-    todo.id === originalTodo.id ? originalTodo : todo
-  )
-);
+    dispatch({ type: actionTypes.UPDATE_TODO, payload: originalTodo });
   } finally {
-    setIsSaving(false);
+    dispatch({ type: actionTypes.SET_IS_SAVING, payload: false });
   }
-}
+};
 
   return (
     <div className={styles.appContainer}> 
@@ -273,22 +256,24 @@ try {
       newToDo={newToDo} 
       setNewToDo={setNewToDo} 
       onAddToDo={addToDo}
-      isSaving={isSaving}
+      isSaving={state.isSaving}
       />
       <ToDoList 
-      toDoList={toDoList} 
+      toDoList={state.toDoList} 
       onCompleteTodo={completeTodo} 
       onUpdateTodo={updateTodo}
-      isLoading={isLoading}  
+      isLoading={state.isLoading}  
       />
 
   <hr /> 
-    {isLoading && <p>Loading...</p>}
-    {errorMessage && (
+    {state.isLoading && <p>Loading...</p>}
+    {state.errorMessage && (
       <div className={styles.errorMessage}>
         <hr />
-        <p>{errorMessage}</p>
-        <button onClick={() => setErrorMessage('')}>Dismiss</button>
+        <p>{state.errorMessage}</p>
+        <button onClick={() => dispatch({ type: actionTypes.SET_ERROR_MESSAGE, payload: ' '})}>
+          Dismiss
+          </button>
         </div>
     )}
     </div>
