@@ -1,1 +1,47 @@
 
+
+body {
+background-color: #efefef;
+font-family: 'Playfair Display', serif;
+margin: 0px;
+text-align: left;
+padding: 20px;
+
+}
+
+.addToDoForm {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: 100%;
+    max-width: 400px;
+
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+}
+
+li {
+    margin-bottom: 10px;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: rgb(18, 18, 18);
+}
+
+li:hover {
+    background-color: #e0e0e0;
+    cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    h1{
+        font-size: 30px;
+    }
+    body {
+        padding: 10px;
+    }
+}

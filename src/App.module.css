@@ -1,0 +1,27 @@
+.appContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+     height: 100vh;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.header {
+font-family: 'Playfair Display', serif;
+font-weight: bold;
+color: rgb(18, 18, 18);
+font-size: 40px;
+background-color: #b2ac88;
+margin: 25px; 
+text-align: left;
+}
+
+
+.errorMessage {
+    border: 1px solid red;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #ffe6e6;
+}
