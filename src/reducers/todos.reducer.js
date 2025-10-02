@@ -22,7 +22,7 @@ export const actionTypes = {
     CLEAR_ERROR: 'CLEAR_ERROR',
 };
 
-export const todosReducer = (state, action) => {
+export function todosReducer(state = initialState, action) {
     switch (action.type) {
         case actionTypes.SET_TODO_LIST:
             return { ...state, toDoList: action.payload };
@@ -68,7 +68,7 @@ export const todosReducer = (state, action) => {
                 isLoading: true,
             };
 
-        case todoActions.LOAD_TODOS:
+        case actionTypes.LOAD_TODOS:
             return {
                 ...state,
                 toDoList: action.records.map(record => ({
@@ -92,18 +92,13 @@ export const todosReducer = (state, action) => {
                 isSaving: true,
             };
         case actionTypes.ADD_TODO: {
-            const savedTodo = {
-                id: action.payload.id,
-                title: action.payload.fields.title,
-                isCompleted: action.payload.fields.isCompleted || false,
-            }; 
-           
-            return {
+            const savedTodo = { id: action.payload.id, title: action.payload.title ?? '', isCompleted: !!action.payload.isCompleted };
+            return { 
             ...state,
             toDoList: [...state.toDoList, savedTodo],
-            isSaving: false,
+            isSaving: false 
         };
-    }
+    };
 
         case actionTypes.END_REQUEST:
             return {
@@ -112,12 +107,6 @@ export const todosReducer = (state, action) => {
                 isSaving: false,
             };
 
-        case actionTypes.SET_LOAD_ERROR:
-            return {
-                ...state,
-                errorMessage: action.error.message,
-                isLoading: false,
-            };
 
         case actionTypes.CLEAR_ERROR: 
             return {

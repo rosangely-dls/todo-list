@@ -1,8 +1,11 @@
-import {
-  reducer as todosReducer,
-  actions as todoActions,
-  initialState as initialTodosState,
-} from './reducers/todos.reducer';
+import React, { useReducer, useState, useCallback, useEffect } from 'react';
+
+
+import { 
+  todosReducer,
+  actionTypes as todoActions,
+  initialState as initialTodosState
+        } from './reducers/todos.reducer';
 
 import './App.css';
 import styles from './App.module.css';
@@ -129,7 +132,8 @@ useEffect(() => {
             isCompleted: records[0].fields.isCompleted || false,
           };
 
-          dispatch({ type: todoActions.ADD_TODO, record: savedTodo });
+          const saved = { id: records[0].id, ...records[0].fields, isCompleted: !!records[0].fields?.isCompleted };
+        dispatch({ type: todoActions.ADD_TODO, payload: saved });
       
         } catch (error) {
         dispatch({ type: todoActions.SET_LOAD_ERROR, error });
@@ -232,19 +236,13 @@ const options = {
       newToDo={newToDo} 
       setNewToDo={setNewToDo} 
       isSaving={todoListState.isSaving}
-      onAddToDo={(title) => {
-        dispatch({ type: todoActions.ADD_TODO, payload: title });
-      }}
+      onAddToDo={addToDo}
       />
       <ToDoList 
       toDoList={todoListState.toDoList} 
       isLoading={todoListState.isLoading}  
-      onCompleteTodo={(id) => {
-        dispatch({ type: todoActions.COMPLETE_TODO, id });
-      }}
-      onUpdateTodo={(editedTodo) => {
-        dispatch({ type: todoActions.UPDATE_TODO, editedTodo });
-      }}
+      onCompleteTodo={completeTodo}
+      onUpdateTodo={updateTodo}
      
       />
 
