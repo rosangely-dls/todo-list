@@ -1,6 +1,8 @@
 import React, { useReducer, useState, useCallback, useEffect } from 'react';
-import { Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Header from './shared/Header';
+import About from './pages/About';
+import NotFound from './pages/NotFound';
 import TodosPage from './pages/TodosPage';
 import { 
   todosReducer,
@@ -252,8 +254,8 @@ const options = {
         /> 
         }
         />
-        <Route path="/about" element={<h1>About</h1>} />
-        <Route path="/*" element={<h1>Not Found</h1>} />
+        <Route path="/about" element={<About />} />
+        <Route path="/*" element={<NotFound/>} />
         </Routes>
     {todoListState.isLoading && <p>Loading...</p>}
     {todoListState.errorMessage && (
