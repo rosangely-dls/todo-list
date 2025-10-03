@@ -1,28 +1,42 @@
 import React, { useReducer, useState, useCallback, useEffect } from 'react';
-
-
+import { Routes, Route, useLocation } from 'react-router-dom';
+import Header from './shared/Header';
+import About from './pages/About';
+import NotFound from './pages/NotFound';
+import TodosPage from './pages/TodosPage';
 import { 
   todosReducer,
   actionTypes as todoActions,
   initialState as initialTodosState
         } from './reducers/todos.reducer';
-
 import './App.css';
 import styles from './App.module.css';
-import ToDoList from './features/TodoList/ToDoList';
-import ToDoForm from './features/ToDoForm';
-import TodosViewForm from './features/TodosViewForm';
-
-
 
 function App() {
+  const location = useLocation();
+  const [title, setTitle] = useState("Todo List");
+
+  useEffect(() => {
+    switch (location.pathname) {
+      case "/":
+        setTitle("Todo List");
+        break;
+        case "/about":
+          setTitle("About");
+          break;
+          default:
+            setTitle("Not Found");
+    }
+  }, [location.pathname]);
+
+
   const [todoListState, dispatch] = useReducer(todosReducer, initialTodosState);
 
   const [newToDo, setNewToDo] = useState('');
   const [queryString, setQueryString] = useState('');
   const [sortField, setSortField] = useState('createdTime');
   const [sortDirection, setSortDirection] = useState('desc');
- 
+
   const baseUrl = `https://api.airtable.com/v0/${import.meta.env.VITE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
   
   const encodeUrl = useCallback(()=> {
@@ -221,32 +235,28 @@ const options = {
   };
 
   return (
+    
     <div className={styles.appContainer}> 
-      <h1 className={styles.header}>My To-Dos</h1>
-      <TodosViewForm
-      sortDirection={sortDirection}
-      setSortDirection={setSortDirection}
-      sortField={sortField}
-      setSortField={setSortField}
-      queryString={queryString}
-      setQueryString={setQueryString}
-      />
-
-      <ToDoForm 
-      newToDo={newToDo} 
-      setNewToDo={setNewToDo} 
-      isSaving={todoListState.isSaving}
-      onAddToDo={addToDo}
-      />
-      <ToDoList 
-      toDoList={todoListState.toDoList} 
-      isLoading={todoListState.isLoading}  
-      onCompleteTodo={completeTodo}
-      onUpdateTodo={updateTodo}
-     
-      />
-
-  <hr /> 
+      <Header title={title} />
+      <Routes>
+        <Route
+          path="/"
+          element={
+      <TodosPage
+      todoListState={todoListState}
+      newToDo={newToDo} setNewToDo={setNewToDo}
+      queryString={queryString} setQueryString={setQueryString}
+      sortField={sortField} setSortField={setSortField}
+      sortDirection={sortDirection} setSortDirection={setSortDirection}
+      addToDo={addToDo}
+      completeTodo={completeTodo}
+      updateTodo={updateTodo}
+        /> 
+        }
+        />
+        <Route path="/about" element={<About />} />
+        <Route path="/*" element={<NotFound/>} />
+        </Routes>
     {todoListState.isLoading && <p>Loading...</p>}
     {todoListState.errorMessage && (
       <div className={styles.errorMessage}>
